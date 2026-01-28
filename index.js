@@ -22,7 +22,10 @@ function renderMenu() {
                 <p class="item-ingredients">${item.ingredients.join(', ')}</p>
                 <p class="item-price">$${item.price}</p>
             </div>
-            <button class="add-btn" data-add="${item.id}">+</button>
+            <div class="btn-container">
+                <button class="add-btn" data-minus="${item.id}">-</button>
+                <button class="add-btn" data-add="${item.id}">+</button>
+            </div>
         </div>
         `;
     });
@@ -66,15 +69,27 @@ document.addEventListener('click', function(e) {
         if (targetItem) {
             order.push(targetItem);
             renderOrder();
+            renderMenu();
             // Clear success message if adding new items after completion
             orderCompleteDiv.style.display = 'none';
             orderCompleteDiv.innerHTML = ''; 
+        }
+    }
+    else if (e.target.dataset.minus) {
+        const itemId = parseInt(e.target.dataset.minus);
+        // Find the index of the first occurrence of this item in the order array
+        const itemIndex = order.findIndex(item => item.id === itemId);
+        if (itemIndex > -1) {
+            order.splice(itemIndex, 1);
+            renderOrder();
+            renderMenu();
         }
     }
     else if (e.target.dataset.remove) {
         const itemIndex = parseInt(e.target.dataset.remove);
         order.splice(itemIndex, 1);
         renderOrder();
+        renderMenu();
     }
     else if (e.target.id === 'complete-order-btn') {
         paymentModal.style.display = 'block';
@@ -92,6 +107,7 @@ paymentForm.addEventListener('submit', function(e) {
     paymentModal.style.display = 'none';
     orderSection.style.display = 'none';
     order = []; // Clear order
+    renderMenu();
     
     // Show success message
     orderCompleteDiv.style.display = 'block';
