@@ -69,7 +69,6 @@ document.addEventListener('click', function(e) {
         if (targetItem) {
             order.push(targetItem);
             renderOrder();
-            renderMenu();
             // Clear success message if adding new items after completion
             orderCompleteDiv.style.display = 'none';
             orderCompleteDiv.innerHTML = ''; 
@@ -82,14 +81,12 @@ document.addEventListener('click', function(e) {
         if (itemIndex > -1) {
             order.splice(itemIndex, 1);
             renderOrder();
-            renderMenu();
         }
     }
     else if (e.target.dataset.remove) {
         const itemIndex = parseInt(e.target.dataset.remove);
         order.splice(itemIndex, 1);
         renderOrder();
-        renderMenu();
     }
     else if (e.target.id === 'complete-order-btn') {
         paymentModal.style.display = 'block';
@@ -107,7 +104,6 @@ paymentForm.addEventListener('submit', function(e) {
     paymentModal.style.display = 'none';
     orderSection.style.display = 'none';
     order = []; // Clear order
-    renderMenu();
     
     // Show success message
     orderCompleteDiv.style.display = 'block';
