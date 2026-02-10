@@ -14,6 +14,8 @@ const orderCompleteDiv = document.getElementById('order-complete');
 function renderMenu() {
     let menuHtml = '';
     menuArray.forEach(item => {
+        // calculate how many of this item are in the current order
+        const count = order.filter(o => o.id === item.id).length;
         menuHtml += `
         <div class="menu-item">
             <div class="item-emoji">${item.emoji}</div>
@@ -23,7 +25,7 @@ function renderMenu() {
                 <p class="item-price">$${item.price}</p>
             </div>
             <div class="btn-container">
-                <button class="add-btn" data-minus="${item.id}">-</button>
+                <button class="add-btn" data-minus="${item.id}" ${count === 0 ? 'disabled' : ''}>-</button>
                 <button class="add-btn" data-add="${item.id}">+</button>
             </div>
         </div>
@@ -69,6 +71,7 @@ document.addEventListener('click', function(e) {
         if (targetItem) {
             order.push(targetItem);
             renderOrder();
+            renderMenu();
             // Clear success message if adding new items after completion
             orderCompleteDiv.style.display = 'none';
             orderCompleteDiv.innerHTML = ''; 
@@ -81,12 +84,14 @@ document.addEventListener('click', function(e) {
         if (itemIndex > -1) {
             order.splice(itemIndex, 1);
             renderOrder();
+            renderMenu();
         }
     }
     else if (e.target.dataset.remove) {
         const itemIndex = parseInt(e.target.dataset.remove);
         order.splice(itemIndex, 1);
         renderOrder();
+        renderMenu();
     }
     else if (e.target.id === 'complete-order-btn') {
         paymentModal.style.display = 'block';
